@@ -1,0 +1,355 @@
+                    {/* SURAT & DOKUMEN SECTION */}
+                    {activeTab === 'Surat & Dokumen' && (
+                        <div className="flex flex-col lg:flex-row gap-8 h-[calc(100vh-120px)]">
+                            <div className="w-full lg:w-1/3 flex flex-col gap-6 no-print overflow-y-auto custom-scroll pr-2 pb-10">
+                                <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm relative overflow-hidden">
+                                    <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-bl-full -z-10"></div>
+                                    <h3 className="font-black mb-6 text-sm text-slate-800 flex items-center gap-3">
+                                        <div className="bg-blue-600 text-white p-2 rounded-xl"><i data-lucide="file-text" className="w-4 h-4"></i></div>
+                                        Pilih Jenis Surat
+                                    </h3>
+                                    <div className="flex flex-col gap-3">
+                                        {['Panggilan Orang Tua', 'Laporan Kunjungan Rumah', 'Surat Pernyataan Siswa', 'Surat Pengunduran Diri'].map(t => (
+                                            <button key={t} onClick={() => setLetter({...letter, type: t})} 
+                                                className={`p-4 rounded-2xl text-xs font-bold transition-all border-2 text-left flex justify-between items-center group
+                                                ${letter.type === t ? 'bg-blue-600 text-white border-blue-600 shadow-lg shadow-blue-500/30' : 'bg-slate-50 text-slate-600 border-slate-100 hover:border-blue-200 hover:bg-blue-50'}`}>
+                                                {t}
+                                                <i data-lucide="check-circle" className={`w-4 h-4 ${letter.type === t ? 'opacity-100' : 'opacity-0 group-hover:opacity-50 group-hover:text-blue-400'}`}></i>
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm relative">
+                                    <h3 className="font-black mb-6 text-sm flex items-center gap-3">
+                                        <div className="bg-slate-900 text-white p-2 rounded-xl"><i data-lucide="edit-3" className="w-4 h-4"></i></div>
+                                        Isi Data Surat
+                                    </h3>
+                                    <div className="space-y-5">
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">Siswa Terkait</label>
+                                            <select className="w-full bg-slate-50 border border-slate-200 p-3 rounded-2xl text-sm font-semibold outline-none focus:border-blue-500 focus:bg-white transition-colors" value={letter.sId} onChange={e => setLetter({...letter, sId: e.target.value})}>
+                                                <option value="">-- Pilih Siswa --</option>
+                                                {students.map(s => <option key={s.id} value={s.id}>{s.name} (Kelas {s.class})</option>)}
+                                            </select>
+                                        </div>
+                                        
+                                        {letter.type !== 'Surat Pengunduran Diri' && (
+                                            <div className="space-y-2">
+                                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">Nomor Surat</label>
+                                                <input type="text" placeholder="045/BK/2026" className="w-full bg-slate-50 border border-slate-200 p-3 rounded-2xl text-sm font-semibold outline-none focus:border-blue-500 focus:bg-white transition-colors" value={letter.no} onChange={e => setLetter({...letter, no: e.target.value})} />
+                                            </div>
+                                        )}
+                                        
+                                        {letter.type === 'Panggilan Orang Tua' && (
+                                            <div className="space-y-5 animate-in slide-in-from-right-4 duration-300">
+                                                <div className="space-y-2">
+                                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">Waktu Pertemuan</label>
+                                                    <input type="datetime-local" className="w-full bg-slate-50 border border-slate-200 p-3 rounded-2xl text-sm font-semibold outline-none focus:border-blue-500 focus:bg-white transition-colors" onChange={e => setLetter({...letter, time: e.target.value})} />
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">Keperluan / Masalah</label>
+                                                    <textarea placeholder="Contoh: Membicarakan absensi siswa yang kurang..." className="w-full bg-slate-50 border border-slate-200 p-4 rounded-2xl text-sm font-semibold outline-none focus:border-blue-500 focus:bg-white transition-colors custom-scroll" rows="3" onChange={e => setLetter({...letter, info: e.target.value})}></textarea>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {letter.type === 'Laporan Kunjungan Rumah' && (
+                                            <div className="space-y-5 animate-in slide-in-from-right-4 duration-300">
+                                                <div className="space-y-2">
+                                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">Nama Orang Tua</label>
+                                                    <input type="text" className="w-full bg-slate-50 border border-slate-200 p-3 rounded-2xl text-sm font-semibold outline-none focus:border-blue-500 focus:bg-white transition-colors" placeholder="Nama lengkap orang tua..." value={letter.parentName} onChange={e => setLetter({...letter, parentName: e.target.value})} />
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">Alamat Kunjungan</label>
+                                                    <textarea className="w-full bg-slate-50 border border-slate-200 p-4 rounded-2xl text-sm font-semibold outline-none focus:border-blue-500 focus:bg-white transition-colors custom-scroll" rows="2" placeholder="Alamat lengkap..." value={letter.address} onChange={e => setLetter({...letter, address: e.target.value})}></textarea>
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">Petugas 2 (Rekan)</label>
+                                                    <input type="text" className="w-full bg-slate-50 border border-slate-200 p-3 rounded-2xl text-sm font-semibold outline-none focus:border-blue-500 focus:bg-white transition-colors" placeholder="Nama Petugas 2..." value={letter.petugas2} onChange={e => setLetter({...letter, petugas2: e.target.value})} />
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">Hasil Kunjungan</label>
+                                                    <textarea className="w-full bg-slate-50 border border-slate-200 p-4 rounded-2xl text-sm font-semibold outline-none focus:border-blue-500 focus:bg-white transition-colors custom-scroll" rows="4" placeholder="Uraikan hasil kesepakatan secara rinci..." onChange={e => setLetter({...letter, info: e.target.value})}></textarea>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {letter.type === 'Surat Pernyataan Siswa' && (
+                                            <div className="space-y-5 animate-in slide-in-from-right-4 duration-300">
+                                                <div className="space-y-2">
+                                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">Nama Orang Tua/Wali</label>
+                                                    <input type="text" className="w-full bg-slate-50 border border-slate-200 p-3 rounded-2xl text-sm font-semibold outline-none focus:border-blue-500 focus:bg-white transition-colors" placeholder="Nama orang tua..." value={letter.parentName} onChange={e => setLetter({...letter, parentName: e.target.value})} />
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">Alamat Rumah</label>
+                                                    <textarea className="w-full bg-slate-50 border border-slate-200 p-3 rounded-2xl text-sm font-semibold outline-none focus:border-blue-500 focus:bg-white transition-colors custom-scroll" rows="2" placeholder="Alamat rumah..." value={letter.address} onChange={e => setLetter({...letter, address: e.target.value})}></textarea>
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">Pernyataan Kesalahan</label>
+                                                    <textarea className="w-full bg-slate-50 border border-slate-200 p-4 rounded-2xl text-sm font-semibold outline-none focus:border-blue-500 focus:bg-white transition-colors custom-scroll" rows="4" placeholder="Tuliskan dengan jelas kesalahan yang diakui siswa..." onChange={e => setLetter({...letter, statement: e.target.value})}></textarea>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {letter.type === 'Surat Pengunduran Diri' && (
+                                            <div className="space-y-5 animate-in slide-in-from-right-4 duration-300">
+                                                <div className="space-y-2">
+                                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">Nama Orang Tua</label>
+                                                    <input type="text" className="w-full bg-slate-50 border border-slate-200 p-3 rounded-2xl text-sm font-semibold outline-none focus:border-blue-500 focus:bg-white transition-colors" placeholder="Nama orang tua..." value={letter.parentName} onChange={e => setLetter({...letter, parentName: e.target.value})} />
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">Pekerjaan</label>
+                                                    <input type="text" className="w-full bg-slate-50 border border-slate-200 p-3 rounded-2xl text-sm font-semibold outline-none focus:border-blue-500 focus:bg-white transition-colors" placeholder="Pekerjaan..." value={letter.parentJob} onChange={e => setLetter({...letter, parentJob: e.target.value})} />
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">Alamat</label>
+                                                    <textarea className="w-full bg-slate-50 border border-slate-200 p-3 rounded-2xl text-sm font-semibold outline-none focus:border-blue-500 focus:bg-white transition-colors custom-scroll" rows="2" placeholder="Alamat lengkap..." value={letter.address} onChange={e => setLetter({...letter, address: e.target.value})}></textarea>
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">Alasan Pengunduran Diri</label>
+                                                    <textarea className="w-full bg-slate-50 border border-slate-200 p-4 rounded-2xl text-sm font-semibold outline-none focus:border-blue-500 focus:bg-white transition-colors custom-scroll" rows="4" placeholder="Dikarenakan pindah domisili..." onChange={e => setLetter({...letter, reason: e.target.value})}></textarea>
+                                                </div>
+                                            </div>
+                                        )}
+                                        
+                                        <div className="pt-4 border-t border-slate-100">
+                                            <button onClick={() => window.print()} className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 text-white py-4 rounded-2xl font-black text-xs uppercase tracking-widest flex items-center justify-center gap-3 hover:shadow-lg hover:shadow-emerald-500/30 hover:-translate-y-1 transition-all">
+                                                <i data-lucide="printer" className="w-5 h-5"></i> Cetak Dokumen A4
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            {/* DOKUMEN PREVIEW/PRINT */}
+                            <div className="w-full lg:w-2/3 h-full overflow-y-auto custom-scroll flex justify-center pb-10 print-wrapper">
+                                <div className="bg-white border shadow-2xl print-only text-sm min-h-[297mm] w-[210mm] origin-top scale-[0.6] sm:scale-[0.8] lg:scale-100 transition-transform duration-500 p-[20mm]" id="printable" style={{boxSizing: 'border-box'}}>
+                                    
+                                    {/* KOP SURAT UMUM */}
+                                    {letter.type !== 'Surat Pengunduran Diri' && (
+                                        <div className="flex items-center gap-4 border-b-4 border-double border-black pb-2 mb-6">
+                                            <img src={logoUrl} className="w-24 h-24 object-contain" />
+                                            <div className="text-center flex-1">
+                                                <h4 className="text-[14px] font-bold uppercase leading-tight">Yayasan Pelita Ilmu Sanggabuana</h4>
+                                                <h2 className="text-[22px] font-black uppercase tracking-tight leading-tight">SMK IPTEK SANGGABUANA</h2>
+                                                <p className="text-[12px] font-bold uppercase leading-tight">Kelompok Teknologi dan Bisnis</p>
+                                                <p className="text-[14px] font-bold uppercase leading-tight border-y border-black inline-block px-4 my-1">Terakreditasi B</p>
+                                                <p className="text-[10px] font-bold">NSS : 402022108001 NPSN : 20265214</p>
+                                                <p className="text-[9px] italic">Jl. Raya Pangkalan - Loji, Ds. Cintaasih Kec. Pangkalan Kab. Karawang 41362</p>
+                                                <p className="text-[9px]">website : www.smkipteksanggabuana.sch.id email : smkipteksanggabuanapangkalan@gmail.com Telp : 0267642500</p>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* KONTEN SURAT BERDASARKAN TYPE */}
+                                    <div className="text-[12px] leading-relaxed font-serif text-black h-full flex flex-col">
+                                        {letter.type === 'Panggilan Orang Tua' && (
+                                            <div className="space-y-4 flex-1">
+                                                <div className="flex justify-between items-start">
+                                                    <table className="w-1/2">
+                                                        <tbody>
+                                                            <tr><td className="w-20">Nomor</td><td>: {letter.no}</td></tr>
+                                                            <tr><td>Sifat</td><td>: <strong>Penting</strong></td></tr>
+                                                            <tr><td>Lampiran</td><td>: -</td></tr>
+                                                            <tr><td>Perihal</td><td>: <strong>Undangan Orang Tua/ Wali</strong></td></tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <div className="text-left w-1/3">
+                                                        <p>Kepada,</p>
+                                                        <p>Yth. Orang Tua/ Wali Peserta Didik</p>
+                                                        <p className="border-b border-black w-full min-h-[1em] mb-1"><strong>{students.find(s=>s.id == letter.sId)?.name || '................................'}</strong></p>
+                                                        <p>di,-</p>
+                                                        <p className="ml-8 font-bold">Tempat</p>
+                                                    </div>
+                                                </div>
+
+                                                <div className="mt-8 space-y-4 text-justify">
+                                                    <p>Dengan Hormat,</p>
+                                                    <p>Sehubungan dengan permasalahan putra/putri Bapak/Ibu/Saudara yang perlu diselesaikan bersama mengenai <strong>{letter.info || '................................................................'}</strong>, dengan ini kami mengharapkan kehadiran Saudara pada:</p>
+                                                    <div className="pl-12 py-2">
+                                                        <table className="w-full">
+                                                            <tbody>
+                                                                <tr><td className="w-40 py-1">Hari dan Tanggal</td><td>: {letter.time ? new Date(letter.time).toLocaleDateString('id-ID', {weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'}) : '................................'}</td></tr>
+                                                                <tr><td className="py-1">Waktu</td><td>: {letter.time ? new Date(letter.time).toLocaleTimeString('id-ID', {hour: '2-digit', minute: '2-digit'}) : '................................'} WIB</td></tr>
+                                                                <tr><td className="py-1">Tempat</td><td>: Ruang BK / Guru SMK IPTEK SANGGABUANA</td></tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <p>Mengingat pentingnya hal tersebut, kami mengharapkan kehadiran Bapak/Ibu/Saudara tepat pada waktunya.</p>
+                                                    <p>Demikian surat panggilan ini kami sampaikan, atas perhatian dan kerjasama yang baik dari Bapak/Ibu/Saudara kami ucapkan terimakasih.</p>
+                                                </div>
+
+                                                <div className="grid grid-cols-2 pt-20 mt-auto">
+                                                    <div className="text-center space-y-24">
+                                                        <p>Mengetahui <br/> Kepala SMK IPTEK SANGGABUANA</p>
+                                                        <p className="font-bold underline">OBAY SOBARI, S.Pd., M.Pd</p>
+                                                    </div>
+                                                    <div className="text-center space-y-24">
+                                                        <p>Pangkalan, {letter.date ? new Date(letter.date).toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'}) : '................................'} <br/> Guru BK</p>
+                                                        <div className="inline-block">
+                                                            <p className="font-bold underline">{letter.staffName}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {letter.type === 'Laporan Kunjungan Rumah' && (
+                                            <div className="space-y-4 flex-1">
+                                                <h3 className="text-center font-bold text-lg underline uppercase mb-8">LAPORAN KUNJUNGAN RUMAH</h3>
+                                                <p>Yang bertanda tangan dibawah ini :</p>
+                                                <div className="pl-10 space-y-1 my-3">
+                                                    <div className="flex"><span className="w-40">Nama</span><span>: <strong>{letter.staffName}</strong></span></div>
+                                                    <div className="flex"><span className="w-40">NIP</span><span>: {letter.staffNip || '-'}</span></div>
+                                                    <div className="flex"><span className="w-40">Jabatan</span><span>: {letter.staffPosition}</span></div>
+                                                </div>
+                                                <p>Telah Melaksanakan tugas kunjungan rumah bersama :</p>
+                                                <div className="pl-10 space-y-1 my-3">
+                                                    <div className="flex"><span className="w-40">Nama Petugas 2</span><span>: <strong>{letter.petugas2 || '................................................................'}</strong></span></div>
+                                                </div>
+                                                <p>Pada hari <strong>{letter.date ? new Date(letter.date).toLocaleDateString('id-ID', {weekday: 'long'}) : '........'}</strong> tanggal <strong>{letter.date ? new Date(letter.date).toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'}) : '................'}</strong> untuk mengunjungi rumah :</p>
+                                                <div className="pl-10 space-y-2 my-3">
+                                                    <div className="flex"><span className="w-40">Nama Siswa</span><span>: <strong>{students.find(s=>s.id == letter.sId)?.name || '................................'}</strong></span></div>
+                                                    <div className="flex"><span className="w-40">Kelas</span><span>: {students.find(s=>s.id == letter.sId)?.class || '................................'}</span></div>
+                                                    <div className="flex"><span className="w-40">NIS</span><span>: {students.find(s=>s.id == letter.sId)?.nis || '................................'}</span></div>
+                                                    <div className="flex"><span className="w-40">Nama Orang Tua</span><span>: <strong>{letter.parentName || '................................................................'}</strong></span></div>
+                                                    <div className="flex"><span className="w-40">Alamat Rumah</span><span className="flex-1">: {letter.address || '................................................................'}</span></div>
+                                                </div>
+                                                <div className="mt-6 flex-1">
+                                                    <p className="font-bold mb-2">Dengan Hasil Kesepakatan / Pembinaan :</p>
+                                                    <div className="border border-black p-4 min-h-[150px] whitespace-pre-wrap rounded-md">
+                                                        {letter.info || '................................................................................................................\n................................................................................................................\n................................................................................................................'}
+                                                    </div>
+                                                </div>
+                                                <div className="grid grid-cols-2 pt-16 mt-8">
+                                                    <div className="text-center space-y-20">
+                                                        <p>Petugas II</p>
+                                                        <p className="font-bold underline">{letter.petugas2 !== '-' && letter.petugas2 ? letter.petugas2 : '( ................................ )'}</p>
+                                                    </div>
+                                                    <div className="text-center space-y-20">
+                                                        <p>Pangkalan, {letter.date ? new Date(letter.date).toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'}) : '................................'} <br/> Petugas I</p>
+                                                        <p className="font-bold underline">{letter.staffName}</p>
+                                                    </div>
+                                                    <div className="col-span-2 text-center mt-12 space-y-20">
+                                                        <p>Mengetahui / Menyetujui <br/> Orang Tua/ Wali Peserta Didik</p>
+                                                        <p className="font-bold underline">{letter.parentName || '( ................................ )'}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {letter.type === 'Surat Pernyataan Siswa' && (
+                                            <div className="space-y-4 flex-1">
+                                                <h3 className="text-center font-bold text-lg underline uppercase mb-8">SURAT PERNYATAAN SISWA</h3>
+                                                <p>Yang bertanda tangan dibawah ini :</p>
+                                                <div className="pl-10 space-y-2 my-4">
+                                                    <div className="flex"><span className="w-40">Nama</span><span>: <strong>{students.find(s=>s.id == letter.sId)?.name || '................................'}</strong></span></div>
+                                                    <div className="flex"><span className="w-40">Kelas</span><span>: {students.find(s=>s.id == letter.sId)?.class || '................................'}</span></div>
+                                                    <div className="flex"><span className="w-40">Alamat</span><span className="flex-1">: {letter.address || '................................................................'}</span></div>
+                                                </div>
+                                                <p className="indent-10">Dengan sadar mengakui telah melanggar tata tertib sekolah, yaitu:</p>
+                                                <div className="pl-10 my-2">
+                                                    <div className="border border-black p-3 min-h-[80px] whitespace-pre-wrap italic bg-gray-50/50">
+                                                        {letter.statement || '1. ................................................................\n2. ................................................................\n3. ................................................................'}
+                                                    </div>
+                                                </div>
+                                                <p className="text-justify indent-10">Dengan ini saya berjanji akan bersungguh-sungguh dan tidak akan mengulangi melanggar tata tertib sekolah atau perbuatan yang merugikan diri sendiri, orang tua dan sekolah. Saya bersedia menerima hukuman pendidikan selama waktu yang sudah ditentukan:</p>
+                                                <ol className="list-decimal pl-12 space-y-1 text-[11px] my-4 font-semibold">
+                                                    <li>Seragam Lengkap dan Rambut Rapih;</li>
+                                                    <li>Absensi Kehadiran tidak ada alpa ataupun bolos/izin/sakit (menyerahkan surat keterangan sakit dari Dokter atau PUSKESMAS);</li>
+                                                    <li>Batas maksimal ketidakhadiran adalah 3 kali dalam 1 semester;</li>
+                                                    <li>Lapor Kedatangan Ke Sekolah Pada Guru Piket Jam 07.00 dan Ketika Pulang Jam 12.00;</li>
+                                                    <li>Tidak Ada di Warung Setelah Pulang Sekolah;</li>
+                                                    <li>Tidak Memegang HP saat jam pelajaran berlangsung;</li>
+                                                    <li>Bersedia mengikuti Kegiatan Pembinaan dari Kodim/ Polsek;</li>
+                                                    <li>Bertanggung jawab mematuhi seluruh peraturan sekolah yang berlaku;</li>
+                                                </ol>
+                                                <p className="text-justify">Jika saya mengulangi perbuatan tersebut diatas, maka saya siap dikenakan sanksi sebagai berikut: <strong>DIKELUARKAN ATAU DIPINDAHKAN DARI SMK IPTEK SANGGABUANA.</strong></p>
+                                                <p className="text-justify">Demikian surat perjanjian ini saya buat dan tidak ada paksaan dari pihak manapun dan dibuat dalam keadaan sadar serta di tanda tangani di hadapan orang tua dan pihak sekolah.</p>
+                                                
+                                                <div className="flex justify-end pt-6">
+                                                    <div className="text-center w-64">
+                                                        <p>Pangkalan, {letter.date ? new Date(letter.date).toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'}) : '................................'}</p>
+                                                        <p>Yang membuat pernyataan</p>
+                                                        <div className="border-2 border-slate-300 border-dashed w-20 h-10 mx-auto my-4 flex items-center justify-center text-[8px] text-slate-400 bg-slate-50">Materai<br/>10000</div>
+                                                        <p className="font-bold underline">{students.find(s=>s.id == letter.sId)?.name || '( ........................................ )'}</p>
+                                                    </div>
+                                                </div>
+
+                                                <div className="grid grid-cols-2 pt-6">
+                                                    <div className="space-y-2">
+                                                        <p>Penanggung Jawab Keluarga :</p>
+                                                        <ol className="list-decimal pl-5 space-y-1">
+                                                            <li>Pihak Orang tua <span className="font-bold">{letter.parentName || '...........................'}</span></li>
+                                                            <li>................................................................</li>
+                                                        </ol>
+                                                    </div>
+                                                    <div className="text-center space-y-20">
+                                                        <p>Guru BK</p>
+                                                        <p className="font-bold underline">{letter.staffName}</p>
+                                                    </div>
+                                                </div>
+
+                                                <div className="text-center space-y-20 mt-8">
+                                                    <p>Mengetahui, <br/> Kepala SMK IPTEK SANGGABUANA</p>
+                                                    <p className="font-bold underline">OBAY SOBARI, S.Pd., M.Pd</p>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {letter.type === 'Surat Pengunduran Diri' && (
+                                            <div className="space-y-4 px-8 pt-12 flex-1">
+                                                <h3 className="text-center font-black text-xl uppercase mb-12 underline tracking-wider">SURAT PENGUNDURAN DIRI</h3>
+                                                <div className="flex justify-end mb-8">
+                                                    <div className="w-1/2">
+                                                        <p>Pangkalan, {letter.date ? new Date(letter.date).toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'}) : '................................'}</p>
+                                                    </div>
+                                                </div>
+                                                <p>Kepada Yth :</p>
+                                                <div className="pl-6 space-y-1 font-bold">
+                                                    <p>Kepala SMK IPTEK SANGGABUANA</p>
+                                                    <p>Jln. Raya Pangkalan Loji Desa Cintaasih</p>
+                                                    <p>Kec. Pangkalan Kab. Karawang</p>
+                                                    <p>Di</p>
+                                                    <p className="pl-10">Tempat</p>
+                                                </div>
+                                                <p className="mt-8">Dengan Hormat,</p>
+                                                <p>Yang bertanda tangan di bawah ini, saya Orang Tua/Wali Murid :</p>
+                                                <div className="pl-10 space-y-2 my-4">
+                                                    <div className="flex"><span className="w-40">Nama</span><span>: <strong>{letter.parentName || '................................................................'}</strong></span></div>
+                                                    <div className="flex"><span className="w-40">Pekerjaan</span><span>: {letter.parentJob || '................................................................'}</span></div>
+                                                    <div className="flex"><span className="w-40">Alamat</span><span className="flex-1">: {letter.address || '................................................................'}</span></div>
+                                                    <div className="flex mt-6"><span className="w-40">Nama Siswa</span><span>: <strong>{students.find(s=>s.id == letter.sId)?.name || '................................'}</strong></span></div>
+                                                    <div className="flex"><span className="w-40">Kelas</span><span>: {students.find(s=>s.id == letter.sId)?.class || '................................'}</span></div>
+                                                    <div className="flex"><span className="w-40">Nomor Induk / NIS</span><span>: {students.find(s=>s.id == letter.sId)?.nis || '................................'}</span></div>
+                                                </div>
+                                                <p className="mt-6 text-justify">Mengajukan permohonan pengunduran diri anak saya tersebut di atas dari status sebagai siswa/i SMK IPTEK SANGGABUANA dikarenakan :</p>
+                                                <div className="pl-10 my-4">
+                                                    <div className="border-b border-black w-full min-h-[30px] font-bold text-lg flex items-end pb-1 uppercase italic">
+                                                        {letter.reason || '................................................................................................................'}
+                                                    </div>
+                                                </div>
+                                                <p className="mt-6 text-justify indent-10">Demikian surat pernyataan ini kami buat dengan sebenar-benarnya dalam keadaan sadar tanpa ada paksaan dari pihak manapun, agar dapat dipergunakan sebagaimana mestinya.</p>
+                                                <p className="text-justify indent-10">Atas perhatian dan kerja sama yang baik dari pihak sekolah, kami mengucapkan banyak terima kasih.</p>
+                                                
+                                                <div className="grid grid-cols-2 pt-24">
+                                                    <div className="text-center space-y-28">
+                                                        <p>Mengetahui,<br/> Kepala SMK IPTEK SANGGABUANA</p>
+                                                        <p className="font-bold underline">OBAY SOBARI, S.Pd., M.Pd</p>
+                                                    </div>
+                                                    <div className="text-center space-y-2">
+                                                        <p>Hormat Saya,<br/> Orang Tua/Wali Murid</p>
+                                                        <div className="h-20 flex items-center justify-center">
+                                                            <div className="border-2 border-slate-300 border-dashed w-20 h-10 flex items-center justify-center text-[8px] text-slate-400 bg-slate-50 rotate-[-10deg]">Materai<br/>10000</div>
+                                                        </div>
+                                                        <p className="font-bold underline inline-block min-w-[200px]">{letter.parentName || '( ........................................ )'}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
